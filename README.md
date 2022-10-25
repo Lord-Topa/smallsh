@@ -26,7 +26,6 @@ PROVIDE A PROMPT FOR RUNNING COMMANDS:
 
 *The general syntax of a command line is:
 "command [arg1 arg2 ...] [< input_file] [> output_file] [&]"
-
 …where items in square brackets are optional.
 
 *You can assume that a command is made up of words separated by spaces.
