@@ -25,7 +25,6 @@ PROVIDE A PROMPT FOR RUNNING COMMANDS:
 *Use the colon : symbol as a prompt for each command line. 
 
 *The general syntax of a command line is:
-
 "command [arg1 arg2 ...] [< input_file] [> output_file] [&]"
 
 …where items in square brackets are optional.
