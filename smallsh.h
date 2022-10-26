@@ -1,7 +1,7 @@
-
 #ifndef __SMALLSH_H
 #define __SMALLSH_H
 
+#define MAXLENGTH 2048
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +12,6 @@
 #include <time.h>
 
 int promptUser(char* storage);
-void processString(char* str);
+void processString(char* str, char* command[]);
 
 #endif
