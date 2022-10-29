@@ -9,35 +9,71 @@
 int main(int argc, char* argv[]) {
 	//allows the maximum command line input to be 2048 characters
 	char commandLineInput[MAXLENGTH];
+	char path[255] = "";
 	char inputFile[255] = "";
 	char outputFile[255] = "";
 	int keepGoing = 1, bg = 0;
 	char* command[512];
-	pid_t spawnPid = -5;
+
 	int childExitStatus = -5;
+	pid_t spawnPid = -5;
 
+	//set up path so that it can print and look the way I want it to
+	chdir(".");
+	getcwd(path, sizeof(path));
 
-	//int bg = 0;
 	while (keepGoing == 1) {
-		if (promptUser(commandLineInput) == -1) {
+		if (promptUser(commandLineInput, path) == -1) {
 			printf("An error has occured while taking in input. EXITING");
 			break;
 		}
 		else {
 			processString(commandLineInput, command, inputFile, outputFile, &bg);
+			
+			if (!command[0]) {continue;}
 			echoCommand(command);
+
+			//Exit and cd were pretty simple to implement so I got thos out of the way
+
+			if (strcmp(command[0], "exit") == 0) {
+				keepGoing = 0;
+			}
+			else if (strcmp(command[0], "cd") == 0) {
+				if (command[1]) {
+					sprintf(path, "%s/%s", path, command[1]);
+					if (chdir(command[1]) == -1) {
+						printf("!!! Could not navigate to '%s' ERROR MESSAGE: %s!!!\n", path, strerror(errno));
+					}
+					getcwd(path, sizeof(path));
+				}
+				else {
+					char* home = getenv("HOME");
+					sprintf(path, "%s", home);
+					chdir(path);
+					getcwd(path, sizeof(path));
+				}
+			}
+			else if (strcmp(command[0], "status") == 0) {
+				//do something
+			}
+			else { //not a built in command
+				//do something
+				runCommand(command, &bg, inputFile, outputFile);
+			}
 		}
 	}
 
 	return 0;
 }
 
-int promptUser(char* storage) {
+int promptUser(char* storage, char* path) {
+	//display the current path and prompt
+	printf("%s", path);
 	printf(": ");
 	fflush(stdout);
+
 	fgets(storage, MAXLENGTH, stdin);
 	if (storage) {
-		//printf("0");
 		return 0;
 	}
 	else {
@@ -70,9 +106,9 @@ void processString(char* str, char* command[], char* input, char* output, int* b
 		}
 	}
 
-	//make sure the string isn't 'empty' (just lacking characters)
+	//make sure the string isn't 'empty'
 	if (strcmp(str, "") == 0) {
-		printf("EMPTY STRING");
+		return;
 	}
 	
 	//split string into smaller strings for args
@@ -117,4 +153,42 @@ void echoCommand(char* command[]) {
 	}
 	printf("\n");
 	fflush(stdout);
+}
+
+void runCommand(char* command[], int* bg, char* input, char* output) {
+	pid_t spawnPid = -5;
+	int childExitStatus = -5;
+
+	/*
+	* still needs to handle background stuff, and file redireciton
+	* and child exit status stuff
+	*/
+
+
+	spawnPid = fork();
+	switch (spawnPid) {
+		case -1: {perror("Something ain't right\n"); exit(1); break;}
+		case 0: {
+			//printf("CHILD(%d): Sleeping for 1 second\n", getpid());
+			//sleep(1);
+			int i = 0;
+			for (i; command[i]; i++) {}
+			//printf("%d\n", i);
+			command[i] = NULL;
+			//execlp("ls", "ls", "-a", NULL);
+			if (execvp(command[0], command) < 0) {
+				perror("exec failure!");
+				exit(1);
+			}
+			//exit(2); break;
+		}
+		default: {
+			//printf("PARENT(%d): Sleeping for 2 seconds\n", getpid());
+			//sleep(2);
+			//printf("PARENT(%d): Wait()ing for child(%d) to terminate\n", getpid(), spawnPid);
+			pid_t actualPid = waitpid(spawnPid, &childExitStatus, 0);
+			//printf("PARENT(%d): Child(%d) terminated, Exiting!\n", getpid(), actualPid);
+			//exit(0); break;
+		}
+	}
 }
