@@ -7,23 +7,28 @@
 
 
 int main(int argc, char* argv[]) {
-	char* commandLineInput = (char*)malloc(MAXLENGTH * sizeof(char)); //allows the maximum command line input to be 2048 characters
-	int keepGoing = 1;
+	//allows the maximum command line input to be 2048 characters
+	char commandLineInput[MAXLENGTH];
+	char inputFile[255] = "";
+	char outputFile[255] = "";
+	int keepGoing = 1, bg = 0;
 	char* command[512];
+	pid_t spawnPid = -5;
+	int childExitStatus = -5;
+
+
+	//int bg = 0;
 	while (keepGoing == 1) {
 		if (promptUser(commandLineInput) == -1) {
 			printf("An error has occured while taking in input. EXITING");
 			break;
 		}
 		else {
-			processString(commandLineInput, command);
-			for (int i = 0; i < 4; i++) {
-				printf("%s\n", command[i]);
-			}
-			//printf("An error has occured while processing your input. REPROMPTING");
+			processString(commandLineInput, command, inputFile, outputFile, &bg);
+			echoCommand(command);
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -44,13 +49,18 @@ int promptUser(char* storage) {
 /*
 * Will take in strings and prepare them for usage in the shell
 * Things will need be done:
+*	Make commands starting with # a comment
 *	remove \n from the user pressing enter
 *	check to make sure string is not empty
 *	split string up into multiple smaller strings to check for args
 */
-void processString(char* str, char* command[]) {
+void processString(char* str, char* command[], char* input, char* output, int* bg) {
 	
+	memset(command, 0, sizeof(*command) * 512); //clear out anything previously in the command array
 
+	if (str[0] == 35) { //if the line starts with # it is a comment and should be disregarded
+		return;
+	}
 
 	//remove \n
 	for (int i = 0; i < strlen(str); i++) { //just replace the newline char with a null terminator
@@ -70,8 +80,41 @@ void processString(char* str, char* command[]) {
 	char* space = " ";
 	char* token = strtok_r(str, space, &saveptr);
 	for (int i = 0; token; i++) {
-		//strcpy(command[i], token);
+
+		/*
+		* The documentation gives us 4 special characters to handle, the first one I will handle is &
+		* this is because & is used to mark the end of a command and tell us that the command should be 
+		* run in the back ground. Since we know that it will be at the end of the command we do not need to 
+		* check anything after the &
+		* 
+		* The next characters to handle are < and > which are used to signify input and output files 
+		* respectively
+		*/
+
+
+		if (strcmp(token, "&") == 0) {
+			*bg = 1;
+			break;
+		}
+		else if (strcmp(token, "<") == 0) {
+			token = strtok_r(NULL, space, &saveptr);
+			strcpy(input, token);
+		}
+		else if (strcmp(token, ">") == 0) {
+			token = strtok_r(NULL, space, &saveptr);
+			strcpy(output, token);
+		}
+
 		command[i] = token;
 		token = strtok_r(NULL, space, &saveptr);
 	}
+}
+
+void echoCommand(char* command[]) {
+	for (int i = 0; command[i]; i++) {
+		printf("%s ", command[i]);
+		fflush(stdout);
+	}
+	printf("\n");
+	fflush(stdout);
 }
