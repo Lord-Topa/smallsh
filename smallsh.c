@@ -28,10 +28,13 @@ int main(int argc, char* argv[]) {
 			break;
 		}
 		else {
+			memset(command, 0, sizeof(*command) * 512); //clear out anything previously in the command array
+			memset(inputFile, 0, sizeof(char) * 255); //clear out anything previously in the input file
+			memset(outputFile, 0, sizeof(char) * 255); //clear out anything previously in the output file
 			processString(commandLineInput, command, inputFile, outputFile, &bg);
 			
 			if (!command[0]) {continue;}
-			echoCommand(command);
+			//echoCommand(command);
 
 			//Exit and cd were pretty simple to implement so I got thos out of the way
 
@@ -54,11 +57,17 @@ int main(int argc, char* argv[]) {
 				}
 			}
 			else if (strcmp(command[0], "status") == 0) {
-				//do something
+				//Return status
+				if (WIFEXITED(childExitStatus)) {
+					printf("Exit Status: %d\n", WEXITSTATUS(childExitStatus));
+				}
+				else {
+					printf("Termination Status: %d\n", WTERMSIG(childExitStatus));
+				}
 			}
 			else { //not a built in command
 				//do something
-				runCommand(command, &bg, inputFile, outputFile);
+				runCommand(command, &bg, inputFile, outputFile, &childExitStatus);
 			}
 		}
 	}
@@ -92,7 +101,7 @@ int promptUser(char* storage, char* path) {
 */
 void processString(char* str, char* command[], char* input, char* output, int* bg) {
 	
-	memset(command, 0, sizeof(*command) * 512); //clear out anything previously in the command array
+	//memset(command, 0, sizeof(*command) * 512); //clear out anything previously in the command array
 
 	if (str[0] == 35) { //if the line starts with # it is a comment and should be disregarded
 		return;
@@ -140,8 +149,11 @@ void processString(char* str, char* command[], char* input, char* output, int* b
 			token = strtok_r(NULL, space, &saveptr);
 			strcpy(output, token);
 		}
+		else {
+			command[i] = token;
+		}
 
-		command[i] = token;
+		//command[i] = token;
 		token = strtok_r(NULL, space, &saveptr);
 	}
 }
@@ -155,15 +167,14 @@ void echoCommand(char* command[]) {
 	fflush(stdout);
 }
 
-void runCommand(char* command[], int* bg, char* input, char* output) {
+void runCommand(char* command[], int* bg, char* input, char* output, int* childExitStatus) {
 	pid_t spawnPid = -5;
-	int childExitStatus = -5;
+	//int childExitStatus = -5;
 
 	/*
-	* still needs to handle background stuff, and file redireciton
-	* and child exit status stuff
+	* still needs to handle background stuff and child exit status stuff
 	*/
-
+	int sourceFD, targetFD, result;
 
 	spawnPid = fork();
 	switch (spawnPid) {
@@ -176,6 +187,23 @@ void runCommand(char* command[], int* bg, char* input, char* output) {
 			//printf("%d\n", i);
 			command[i] = NULL;
 			//execlp("ls", "ls", "-a", NULL);
+
+			
+			if (strcmp(input, "")) {
+				//printf("%s\n", input)
+				sourceFD = open(input, O_RDONLY);
+				if (sourceFD == -1) { perror("source open()"); exit(1); }
+				result = dup2(sourceFD, 0); //set STDIN to point to same thing that sourceFD is pointing to
+				fcntl(sourceFD, F_SETFD, FD_CLOEXEC);
+			}
+
+			if (strcmp(output, "")) {
+				targetFD = open(output, O_WRONLY | O_CREAT | O_TRUNC, 0666); //let anyone read and write 
+				if (targetFD == -1) { perror("target open()"); exit(1); }
+				result = dup2(targetFD, 1); //set STDOUT to point to same thing that sourceFD is pointing to
+				fcntl(targetFD, F_SETFD, FD_CLOEXEC);
+			}
+
 			if (execvp(command[0], command) < 0) {
 				perror("exec failure!");
 				exit(1);
