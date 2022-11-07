@@ -1,4 +1,7 @@
 # smallsh
+
+In order to run the shell maximize or fullscreen the terminal then run "make clean; make", after that run "./smallsh"
+
 A small shell I devolped in just under 2 weeks (10/25/2022 - 11/7/2022) for project 3 in my Operating Systems class.
 
 Some of the requirements for this project were:
@@ -87,3 +90,94 @@ status : prints out either the exit status or the terminating signal of the last
 
 ----------------------------------------------
 
+EXECUTE OTHER COMMANDS BY CREATING NEW PROCESSES USING A FUNCTION FROM THE EXEC FAMILY OF FUNCTIONS
+
+----------------------------------------------
+
+shell will execute any commands other than the 3 built-in command by using fork(), exec() and waitpid()
+
+Whenever a non-built in command is received, the parent (i.e., smallsh) will fork off a child.
+
+The child will use a function from the exec() family of functions to run the command.
+
+The shell should use the PATH variable to look for non-built in commands, and it should allow shell scripts to be executed
+
+If a command fails because the shell could not find the command to run, then the shell will print an error message and set the exit status to 1
+
+A child process must terminate after running a command (whether the command is successful or it fails).
+
+----------------------------------------------
+
+SUPPORT INPUT AND OUTPUT REDIRECTION
+
+----------------------------------------------
+
+must do any input and/or output redirection using dup2(). The redirection must be done before using exec() to run the command.
+
+An input file redirected via stdin should be opened for reading only; if the shell cannot open the file for reading, it should print an error message and set the exit status to 1 (but don't exit the shell).
+
+Similarly, an output file redirected via stdout should be opened for writing only; it should be truncated if it already exists or created if it does not exist. If the shell cannot open the output file it should print an error message and set the exit status to 1 (but don't exit the shell).
+
+Both stdin and stdout for a command can be redirected at the same time.
+
+----------------------------------------------
+
+SUPPORT RUNNING COMMANDS IN FOREGROUND AND BACKGROUND PROCESSES
+
+----------------------------------------------
+
+FOREGROUND
+
+Any command without an & at the end must be run as a foreground command and the shell must wait for the completion of the command before prompting for the next command.
+For such commands, the parent shell does NOT return command line access and control to the user until the child terminates.
+
+BACKGROUND
+
+Any non built-in command with an & at the end must be run as a background command and the shell must not wait for such a command to complete. 
+For such commands, the parent must return command line access and control to the user immediately after forking off the child.
+
+The shell will print the process id of a background process when it begins.
+
+When a background process terminates, a message showing the process id and exit status will be printed. This message must be printed just before the prompt for a new command is displayed.
+
+If the user doesn't redirect the standard input for a background command, then standard input should be redirected to /dev/null
+
+If the user doesn't redirect the standard output for a background command, then standard output should be redirected to /dev/null
+
+----------------------------------------------
+
+IMPLEMENT CUSTOM HANDLERS FOR 2 SIGNALS, SIGINT AND SIGTSTP
+
+----------------------------------------------
+
+SIGINT
+
+The shell, i.e., the parent process, must ignore SIGINT
+
+Any children running as background processes must ignore SIGINT
+
+A child running as a foreground process must terminate itself when it receives SIGINT
+
+	The parent must not attempt to terminate the foreground child process; instead the foreground child (if any) must terminate itself on receipt of this signal.
+
+	If a child foreground process is killed by a signal, the parent must immediately print out the number of the signal that killed it's foreground child process (see the example) before prompting the user for the next command.
+
+SIGTSTP
+
+A child, if any, running as a foreground process must ignore SIGTSTP.
+
+Any children running as background process must ignore SIGTSTP.
+
+When the parent process running the shell receives SIGTSTP
+
+	The shell must display an informative message immediately if it's sitting at the prompt, or immediately after any currently running foreground process has terminated
+
+	The shell then enters a state where subsequent commands can no longer be run in the background.
+
+	In this state, the & operator should simply be ignored, i.e., all such commands are run as if they were foreground processes.
+
+If the user sends SIGTSTP again, then the shell will
+
+	Display another informative message immediately after any currently running foreground process terminates
+
+	The shell then returns back to the normal condition where the & operator is once again honored for subsequent commands, allowing them to be executed in the background.
