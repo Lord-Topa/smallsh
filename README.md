@@ -1,26 +1,76 @@
 # smallsh
 
-In order to run the shell maximize or fullscreen the terminal then run "make clean; make", after that run "./smallsh"
+----------------------------------------------
+
+CONTENTS: 
+	
+----------------------------------------------
+
+	Instructions
+
+	Description
+
+	In-depth Breakdown of requirements
+
+	Sources Used
+
+----------------------------------------------
+
+INSTRUCTIONS: 
+	
+----------------------------------------------
+
+	For best experience have terminal maximized or fullscreen
+
+	To run the shell use these commands in this order:
+		
+		1) make clean; make
+		
+		2) ./topash
+
+	Shell Commands:
+	
+		Shell should handle all external programs via running them through a series of forks and exec calls
+
+		Built in commands:
+			
+			cd - Will navigate shell to home directory
+
+			cd <PATH> - Will navigate shell to PATH 
+			
+			CTRL+Z - keyboard shortcut that on most systems will enter or exit foreground-only mode
+
+			status - Will return exit status of most recent program, if no programs run will return exit status 0
+
+			exit - Will exit the shell
+
+----------------------------------------------
+
+DESCRIPTION: 
+
+----------------------------------------------
 
 A small shell I devolped in just under 2 weeks (10/25/2022 - 11/7/2022) for project 3 in my Operating Systems class.
 
-Some of the requirements for this project were:
+The requirements for this project were:
 
-1.) Provide a prompt for running commands
+	1.) Provide a prompt for running commands
 
-2.) Handle blank lines and comments, which are lines beginning with the # character
+	2.) Handle blank lines and comments, which are lines beginning with the # character
 
-3.) Provide expansion for the variable $$
+	3.) Provide expansion for the variable $$
 
-4.) Execute 3 commands exit, cd, and status via code built into the shell
+	4.) Execute 3 commands exit, cd, and status via code built into the shell
 
-5.) Execute other commands by creating new processes using a function from the exec family of functions
+	5.) Execute other commands by creating new processes using a function from the exec family of functions
 
-6.) Support input and output redirection
+	6.) Support input and output redirection
 
-7.) Support running commands in foreground and background processes
+	7.) Support running commands in foreground and background processes
 
-8.) Implement custom handlers for 2 signals, SIGINT and SIGTSTP
+	8.) Implement custom handlers for 2 signals, SIGINT and SIGTSTP
+
+For a more in-depth breakdown of the requirments see below
 
 ----------------------------------------------
 
@@ -181,3 +231,29 @@ If the user sends SIGTSTP again, then the shell will
 	Display another informative message immediately after any currently running foreground process terminates
 
 	The shell then returns back to the normal condition where the & operator is once again honored for subsequent commands, allowing them to be executed in the background.
+
+----------------------------------------------
+
+SOURCES USED:
+
+----------------------------------------------
+
+Used to generate ASCII Art (edits made to art for compatibility):
+	
+	https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
+
+Used for help on signal handlers: 
+
+	https://stackoverflow.com/questions/40098170/handling-sigtstp-signals-in-c 
+
+	https://www.geeksforgeeks.org/signals-c-language/
+
+Used for file permissions help:
+
+	https://chmod-calculator.com
+
+Used for general help:
+
+	https://linux.die.net
+
+	Lecture Slides
