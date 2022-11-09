@@ -74,7 +74,7 @@ For a more in-depth breakdown of the requirments see below
 
 ----------------------------------------------
 
-PROVIDE A PROMPT FOR RUNNING COMMANDS:
+1.) PROVIDE A PROMPT FOR RUNNING COMMANDS:
 
 ----------------------------------------------
 
@@ -98,11 +98,11 @@ PROVIDE A PROMPT FOR RUNNING COMMANDS:
 
 * Do not need to do any error checking on the syntax of the command line.
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
-HANDLE BLANK LINES AND COMMENTS
+2.) HANDLE BLANK LINES AND COMMENTS
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
 * The shell should allow blank lines and comments.
 
@@ -112,19 +112,19 @@ HANDLE BLANK LINES AND COMMENTS
 
 * The shell should just re-prompt for another command when it receives either a blank line or a comment line.
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
-PROVIDE EXPANSION FOR THE VARIABLE $$
+3.) PROVIDE EXPANSION FOR THE VARIABLE $$
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
 * The shell must expand any instance of "$$" in a command into the process ID of the smallsh itself. The shell does not otherwise perform variable expansion. 
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
-EXECUTE 3 COMMANDS VIA CODE BUILT INTO THE SHELL (exit, cd, status)
+4.) EXECUTE 3 COMMANDS VIA CODE BUILT INTO THE SHELL (exit, cd, status)
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
 * Do not have to support input/output redirection for these built in commands
 
@@ -132,17 +132,17 @@ EXECUTE 3 COMMANDS VIA CODE BUILT INTO THE SHELL (exit, cd, status)
 
 * If the user tries to run one of these built-in commands in the background with the & option, ignore that option and run the command in the foreground anyway (i.e. don't display an error, just run the command in the foreground).
 
-	exit : exits the shell, takes no args, when run shell must kill any other processes or jobs that the shell has started before it terminates.
+* exit : exits the shell, takes no args, when run shell must kill any other processes or jobs that the shell has started before it terminates.
 
-	cd : changes working directory of shell, if no args changes to directory specified in the HOME enviroment variable, otherwise go to path specified (relative or absolute)
+* cd : changes working directory of shell, if no args changes to directory specified in the HOME enviroment variable, otherwise go to path specified (relative or absolute)
 
-	status : prints out either the exit status or the terminating signal of the last foreground process ran by the shell, if run before any foreground command then return exit status 0, should ignore built in commands
+* status : prints out either the exit status or the terminating signal of the last foreground process ran by the shell, if run before any foreground command then return exit status 0, should ignore built in commands
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
-EXECUTE OTHER COMMANDS BY CREATING NEW PROCESSES USING A FUNCTION FROM THE EXEC FAMILY OF FUNCTIONS
+5.) EXECUTE OTHER COMMANDS BY CREATING NEW PROCESSES USING A FUNCTION FROM THE EXEC FAMILY OF FUNCTIONS
 
-----------------------------------------------
+-------------------------------------------------------------------------------------------------------
 
 * Shell will execute any commands other than the 3 built-in command by using fork(), exec() and waitpid()
 
@@ -158,7 +158,7 @@ EXECUTE OTHER COMMANDS BY CREATING NEW PROCESSES USING A FUNCTION FROM THE EXEC 
 
 ----------------------------------------------
 
-SUPPORT INPUT AND OUTPUT REDIRECTION
+6.) SUPPORT INPUT AND OUTPUT REDIRECTION
 
 ----------------------------------------------
 
@@ -172,7 +172,7 @@ SUPPORT INPUT AND OUTPUT REDIRECTION
 
 ----------------------------------------------
 
-SUPPORT RUNNING COMMANDS IN FOREGROUND AND BACKGROUND PROCESSES
+7.) SUPPORT RUNNING COMMANDS IN FOREGROUND AND BACKGROUND PROCESSES
 
 ----------------------------------------------
 
@@ -196,7 +196,7 @@ For such commands, the parent must return command line access and control to the
 
 ----------------------------------------------
 
-IMPLEMENT CUSTOM HANDLERS FOR 2 SIGNALS, SIGINT AND SIGTSTP
+8.) IMPLEMENT CUSTOM HANDLERS FOR 2 SIGNALS, SIGINT AND SIGTSTP
 
 ----------------------------------------------
 
@@ -218,19 +218,19 @@ SIGTSTP
 
 * Any children running as background process must ignore SIGTSTP.
 
-* When the parent process running the shell receives SIGTSTP
+* When the parent process running the shell receives SIGTSTP:
 
-	The shell must display an informative message immediately if it's sitting at the prompt, or immediately after any currently running foreground process has terminated
+	* The shell must display an informative message immediately if it's sitting at the prompt, or immediately after any currently running foreground process has terminated
 
-	The shell then enters a state where subsequent commands can no longer be run in the background.
+	* The shell then enters a state where subsequent commands can no longer be run in the background.
 
-	In this state, the & operator should simply be ignored, i.e., all such commands are run as if they were foreground processes.
+	* In this state, the & operator should simply be ignored, i.e., all such commands are run as if they were foreground processes.
 
-* If the user sends SIGTSTP again, then the shell will
+* If the user sends SIGTSTP again, then the shell will:
 
-	Display another informative message immediately after any currently running foreground process terminates
+	* Display another informative message immediately after any currently running foreground process terminates
 
-	The shell then returns back to the normal condition where the & operator is once again honored for subsequent commands, allowing them to be executed in the background.
+	* The shell then returns back to the normal condition where the & operator is once again honored for subsequent commands, allowing them to be executed in the background.
 
 ----------------------------------------------
 
@@ -240,20 +240,20 @@ SOURCES USED:
 
 Used to generate ASCII Art (edits made to art for compatibility):
 	
-	* https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
+	https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
 
 Used for help on signal handlers: 
 
-	* https://stackoverflow.com/questions/40098170/handling-sigtstp-signals-in-c 
+	https://stackoverflow.com/questions/40098170/handling-sigtstp-signals-in-c 
 
-	* https://www.geeksforgeeks.org/signals-c-language/
+	https://www.geeksforgeeks.org/signals-c-language/
 
 Used for file permissions help:
 
-	* https://chmod-calculator.com
+	https://chmod-calculator.com
 
 Used for general help:
 
-	* https://linux.die.net
+	https://linux.die.net
 
-	* Lecture Slides
+	Lecture Slides
