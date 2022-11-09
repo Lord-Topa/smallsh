@@ -37,18 +37,6 @@ int main(int argc, char* argv[]) {
 	chdir(".");
 	getcwd(path, sizeof(path));
 
-	//struct sigaction sa_sigint = { 0 };
-	//sa_sigint.sa_handler = SIG_IGN;
-	//sigfillset(&sa_sigint.sa_mask);
-	//sa_sigint.sa_flags = 0;
-	//sigaction(SIGINT, &sa_sigint, NULL);
-
-	//struct sigaction sa_sigstp = { 0 };
-	//sa_sigstp.sa_handler = handleStop;
-	//sigfillset(&sa_sigstp.sa_mask);
-	//sa_sigstp.sa_flags = 0;
-	//sigaction(SIGSTOP, &sa_sigstp, NULL);
-
 	struct sigaction si;
 	si.sa_handler = SIG_IGN;
 	si.sa_flags = 0;
@@ -70,6 +58,7 @@ int main(int argc, char* argv[]) {
 	while (keepGoing == 1) {
 		if (promptUser(commandLineInput, path) == -1) {
 			printf("An error has occured while taking in input. EXITING");
+			fflush(stdout);
 			break;
 		}
 		else {
@@ -79,7 +68,6 @@ int main(int argc, char* argv[]) {
 			processString(pid, commandLineInput, command, inputFile, outputFile, &bg);
 			
 			if (!command[0]) {continue;}
-			//echoCommand(command);
 
 			if (strcmp(command[0], "exit") == 0) {
 				keepGoing = 0;
@@ -90,8 +78,6 @@ int main(int argc, char* argv[]) {
 					if (chdir(command[1]) == -1) {
 						printf("!!! Could not navigate to '%s' ERROR MESSAGE: %s!!!\n", path, strerror(errno));
 					}
-					//sprintf(path, "%s/%s", path, command[1]);
-					//printf("%s\n", path);
 					getcwd(path, sizeof(path));
 				}
 				else {
@@ -112,7 +98,7 @@ int main(int argc, char* argv[]) {
 				fflush(stdout);
 			}
 			else { //not a built in command
-				runCommand(command, inputFile, outputFile, childExitStatus, &bg);
+				runCommand(command, inputFile, outputFile, childExitStatus, &bg, si);
 			}
 		}
 	}
@@ -122,7 +108,6 @@ int main(int argc, char* argv[]) {
 
 int promptUser(char* storage, char* path) {
 	//display the current path and prompt
-	//printf("%s", path);
 	printf(": ");
 	fflush(stdout);
 
@@ -146,7 +131,6 @@ int promptUser(char* storage, char* path) {
 */
 void processString(int pid, char* str, char* command[], char* input, char* output, int* bg) {
 	
-	//memset(command, 0, sizeof(*command) * 512); //clear out anything previously in the command array
 	*bg = 0;
 
 	if (str[0] == 35) { //if the line starts with # it is a comment and should be disregarded
@@ -183,7 +167,7 @@ void processString(int pid, char* str, char* command[], char* input, char* outpu
 		*/
 
 
-		if (strcmp(token, "&") == 0) {
+		if (strcmp(token, "&") == 0 && strcmp(command[0], "echo") != 0) {
 			*bg = 1;
 			break;
 		}
@@ -240,7 +224,7 @@ void echoCommand(char* command[]) {
 	fflush(stdout);
 }
 
-void runCommand(char* command[], char* input, char* output, int* childExitStatus, int* bg) {
+void runCommand(char* command[], char* input, char* output, int* childExitStatus, int* bg, struct sigaction si) {
 	pid_t spawnPid = -5;
 
 	/*
@@ -261,6 +245,16 @@ void runCommand(char* command[], char* input, char* output, int* childExitStatus
 	switch (spawnPid) {
 		case -1: {perror("Something ain't right\n"); exit(1); break;}
 		case 0: {
+
+			if (*bg == 1 && bgAllowed == 1) {
+				si.sa_handler = SIG_DFL;
+				if (sigaction(SIGINT, &si, NULL) == -1) {
+					perror("Couldn't set SIGTSTP handler");
+				}
+			}
+
+			
+
 			int i = 0;
 			for (i; command[i]; i++) {}
 			command[i] = NULL;

@@ -17,7 +17,7 @@
 int promptUser(char* storage, char* path);
 void processString(int pid, char* str, char* command[], char* input, char* output, int* bg);
 void echoCommand(char* command[]);
-void runCommand(char* command[], char* input, char* output, int* childExitStatus, int* bg);
+void runCommand(char* command[], char* input, char* output, int* childExitStatus, int* bg, struct sigaction si);
 void handleStop(int signo);
 
 #endif
