@@ -1,87 +1,100 @@
-# smallsh
+# Topa Shell
 
-----------------------------------------------
 
-CONTENTS: 
+
+## CONTENTS: 
 	
-----------------------------------------------
+* [Instructions](https://github.com/Lord-Topa/smallsh/edit/main/README.md#instructions)
 
-	Instructions
+* [Description](https://github.com/Lord-Topa/smallsh/edit/main/README.md#description)
 
-	Description
+* [In-depth Breakdown of Project Requirements:](https://github.com/Lord-Topa/smallsh/edit/main/README.md#in-depth-breakdown-of-requirments)
+	1) [Provide a prompt for running commands](https://github.com/Lord-Topa/smallsh/edit/main/README.md#1-provide-a-prompt-for-running-commands)
+	2) [Handle blank lines and comments](https://github.com/Lord-Topa/smallsh/edit/main/README.md#2-handle-blank-lines-and-comments)
+	3) [Provide expansion for the variable $$](https://github.com/Lord-Topa/smallsh/edit/main/README.md#3-provide-expansion-for-the-variable-)
+	4) [Execute 3 commands exit, cd, and status via code built into the shell](https://github.com/Lord-Topa/smallsh/edit/main/README.md#4-execute-3-commands-via-code-built-into-the-shell-exit-cd-status)
+	5) [Execute other commands by creating new processes using a function from the exec family of functions](https://github.com/Lord-Topa/smallsh/edit/main/README.md#5-execute-other-commands-by-creating-new-processes-using-a-function-from-the-exec-family-of-functions)
+	6) [Support input and output redirection](https://github.com/Lord-Topa/smallsh/edit/main/README.md#6-support-input-and-output-redirection)
+	7) [Support running commands in foreground and background processes](https://github.com/Lord-Topa/smallsh/edit/main/README.md#7-support-running-commands-in-foreground-and-background-processes)
+	8) [Implement custom handlers for 2 signals, SIGINT and SIGTSTP](https://github.com/Lord-Topa/smallsh/edit/main/README.md#8-implement-custom-handlers-for-2-signals-sigint-and-sigtstp)
 
-	In-depth Breakdown of requirements
+* [Sources Used](https://github.com/Lord-Topa/smallsh/edit/main/README.md#sources-used)
 
-	Sources Used
 
-----------------------------------------------
 
-INSTRUCTIONS: 
+## INSTRUCTIONS: 
 	
-----------------------------------------------
 
-	For best experience have terminal maximized or fullscreen
 
-	To run the shell use these commands in this order:
+*For best experience have terminal maximized or fullscreen*
+
+**To run the shell use these commands in this order:**
 		
-		1) make clean; make
+>make clean; make
 		
-		2) ./topash
+>./topash
 
-	Shell Commands:
+**General Shell Syntax:**
+
+* Commmands should follow the syntax of...
+
+	*command [arg1 arg2 ...] [< input_file] [> output_file] [&]*
+
+	…where items in square brackets are optional.
 	
-		Shell should handle all external programs via running them through a series of forks and exec calls
+* Lines starting with *#* are considered comments and will be ignored by the shell
+* A *&* at the end of a command will mark that command as one to be run in the background
+* A *<* followed by a space and then a filename will mark that file as the input file for a command
+* A *>* followed by a space and then a filename will mark that file as the output file for a command
 
-		Built in commands:
+**Built in Shell Commands:**
 			
-			cd - Will navigate shell to home directory
+>cd - Will navigate shell to home directory
 
-			cd <PATH> - Will navigate shell to PATH 
-			
-			CTRL+Z - keyboard shortcut that on most systems will enter or exit foreground-only mode
+>cd <PATH> - Will navigate shell to PATH 
+		
+>CTRL+Z - keyboard shortcut that on most systems will enter or exit foreground-only mode
 
-			status - Will return exit status of most recent program, if no programs run will return exit status 0
+>status - Will return exit status of most recent program, if no programs run will return exit status 0
 
-			exit - Will exit the shell
+>exit - Will exit the shell
 
-----------------------------------------------
 
-DESCRIPTION: 
 
-----------------------------------------------
+## DESCRIPTION: 
+
+
 
 A small shell I devolped in just under 2 weeks (10/25/2022 - 11/7/2022) for project 3 in my Operating Systems class.
 
-The requirements for this project were:
+**The requirements for this project were:**
 
-	1.) Provide a prompt for running commands
+>1) Provide a prompt for running commands
 
-	2.) Handle blank lines and comments, which are lines beginning with the # character
+>2) Handle blank lines and comments, which are lines beginning with the # character
 
-	3.) Provide expansion for the variable $$
+>3) Provide expansion for the variable $$
 
-	4.) Execute 3 commands exit, cd, and status via code built into the shell
+>4) Execute 3 commands exit, cd, and status via code built into the shell
 
-	5.) Execute other commands by creating new processes using a function from the exec family of functions
+>5) Execute other commands by creating new processes using a function from the exec family of functions
 
-	6.) Support input and output redirection
+>6) Support input and output redirection
 
-	7.) Support running commands in foreground and background processes
+>7) Support running commands in foreground and background processes
 
-	8.) Implement custom handlers for 2 signals, SIGINT and SIGTSTP
+>8) Implement custom handlers for 2 signals, SIGINT and SIGTSTP
 
-For a more in-depth breakdown of the requirments see below
+## In-Depth Breakdown of Project Requirments:
+------------------
+### PROVIDE A PROMPT FOR RUNNING COMMANDS:
+------------------
 
-----------------------------------------------
-
-1.) PROVIDE A PROMPT FOR RUNNING COMMANDS:
-
-----------------------------------------------
 
 * Use the colon : symbol as a prompt for each command line. 
 
 * The general syntax of a command line is:
-	"command [arg1 arg2 ...] [< input_file] [> output_file] [&]"
+	*command [arg1 arg2 ...] [< input_file] [> output_file] [&]*
 	…where items in square brackets are optional.
 
 * Assume that a command is made up of words separated by spaces.
@@ -98,11 +111,11 @@ For a more in-depth breakdown of the requirments see below
 
 * Do not need to do any error checking on the syntax of the command line.
 
--------------------------------------------------------------------------------------------------------
 
-2.) HANDLE BLANK LINES AND COMMENTS
+------------------
+### HANDLE BLANK LINES AND COMMENTS
+------------------
 
--------------------------------------------------------------------------------------------------------
 
 * The shell should allow blank lines and comments.
 
@@ -112,19 +125,19 @@ For a more in-depth breakdown of the requirments see below
 
 * The shell should just re-prompt for another command when it receives either a blank line or a comment line.
 
--------------------------------------------------------------------------------------------------------
 
-3.) PROVIDE EXPANSION FOR THE VARIABLE $$
+------------------
+### PROVIDE EXPANSION FOR THE VARIABLE $$
+------------------
 
--------------------------------------------------------------------------------------------------------
 
 * The shell must expand any instance of "$$" in a command into the process ID of the smallsh itself. The shell does not otherwise perform variable expansion. 
 
--------------------------------------------------------------------------------------------------------
 
-4.) EXECUTE 3 COMMANDS VIA CODE BUILT INTO THE SHELL (exit, cd, status)
+------------------
+### EXECUTE 3 COMMANDS VIA CODE BUILT INTO THE SHELL (exit, cd, status)
+------------------
 
--------------------------------------------------------------------------------------------------------
 
 * Do not have to support input/output redirection for these built in commands
 
@@ -138,11 +151,11 @@ For a more in-depth breakdown of the requirments see below
 
 * status : prints out either the exit status or the terminating signal of the last foreground process ran by the shell, if run before any foreground command then return exit status 0, should ignore built in commands
 
--------------------------------------------------------------------------------------------------------
 
-5.) EXECUTE OTHER COMMANDS BY CREATING NEW PROCESSES USING A FUNCTION FROM THE EXEC FAMILY OF FUNCTIONS
+------------------
+### EXECUTE OTHER COMMANDS BY CREATING NEW PROCESSES USING A FUNCTION FROM THE EXEC FAMILY OF FUNCTIONS
+------------------
 
--------------------------------------------------------------------------------------------------------
 
 * Shell will execute any commands other than the 3 built-in command by using fork(), exec() and waitpid()
 
@@ -156,11 +169,11 @@ For a more in-depth breakdown of the requirments see below
 
 * A child process must terminate after running a command (whether the command is successful or it fails).
 
-----------------------------------------------
 
-6.) SUPPORT INPUT AND OUTPUT REDIRECTION
+------------------
+### SUPPORT INPUT AND OUTPUT REDIRECTION
+------------------
 
-----------------------------------------------
 
 * Must do any input and/or output redirection using dup2(). The redirection must be done before using exec() to run the command.
 
@@ -170,18 +183,18 @@ For a more in-depth breakdown of the requirments see below
 
 * Both stdin and stdout for a command can be redirected at the same time.
 
-----------------------------------------------
 
-7.) SUPPORT RUNNING COMMANDS IN FOREGROUND AND BACKGROUND PROCESSES
+------------------
+### SUPPORT RUNNING COMMANDS IN FOREGROUND AND BACKGROUND PROCESSES
+------------------
 
-----------------------------------------------
 
-FOREGROUND
+**FOREGROUND**
 
 * Any command without an & at the end must be run as a foreground command and the shell must wait for the completion of the command before prompting for the next command.
 For such commands, the parent shell does NOT return command line access and control to the user until the child terminates.
 
-BACKGROUND
+**BACKGROUND**
 
 * Any non built-in command with an & at the end must be run as a background command and the shell must not wait for such a command to complete. 
 For such commands, the parent must return command line access and control to the user immediately after forking off the child.
@@ -194,13 +207,13 @@ For such commands, the parent must return command line access and control to the
 
 * If the user doesn't redirect the standard output for a background command, then standard output should be redirected to /dev/null
 
-----------------------------------------------
 
-8.) IMPLEMENT CUSTOM HANDLERS FOR 2 SIGNALS, SIGINT AND SIGTSTP
+------------------
+### IMPLEMENT CUSTOM HANDLERS FOR 2 SIGNALS, SIGINT AND SIGTSTP
+------------------
 
-----------------------------------------------
 
-SIGINT
+**SIGINT**
 
 * The shell, i.e., the parent process, must ignore SIGINT
 
@@ -208,12 +221,11 @@ SIGINT
 
 * A child running as a foreground process must terminate itself when it receives SIGINT
 
-	The parent must not attempt to terminate the foreground child process; instead the foreground child (if any) must terminate itself on receipt of this signal.
+	* The parent must not attempt to terminate the foreground child process; instead the foreground child (if any) must terminate itself on receipt of this signal.
 
-	If a child foreground process is killed by a signal, the parent must immediately print out the number of the signal that killed it's foreground child process (see the example) before prompting the user for the next command.
+	* If a child foreground process is killed by a signal, the parent must immediately print out the number of the signal that killed it's foreground child process (see the example) before prompting the user for the next command.
 
-SIGTSTP
-
+**SIGTSTP**
 * A child, if any, running as a foreground process must ignore SIGTSTP.
 
 * Any children running as background process must ignore SIGTSTP.
@@ -232,28 +244,28 @@ SIGTSTP
 
 	* The shell then returns back to the normal condition where the & operator is once again honored for subsequent commands, allowing them to be executed in the background.
 
-----------------------------------------------
 
-SOURCES USED:
 
-----------------------------------------------
+## SOURCES USED:
+
+
 
 Used to generate ASCII Art (edits made to art for compatibility):
 	
-	https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
+* https://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20
 
 Used for help on signal handlers: 
 
-	https://stackoverflow.com/questions/40098170/handling-sigtstp-signals-in-c 
+* https://stackoverflow.com/questions/40098170/handling-sigtstp-signals-in-c 
 
-	https://www.geeksforgeeks.org/signals-c-language/
+* https://www.geeksforgeeks.org/signals-c-language/
 
 Used for file permissions help:
 
-	https://chmod-calculator.com
+* https://chmod-calculator.com
 
 Used for general help:
 
-	https://linux.die.net
+* https://linux.die.net
 
-	Lecture Slides
+* Lecture Slides
