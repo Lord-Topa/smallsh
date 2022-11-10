@@ -14,8 +14,8 @@
 	3) [Provide expansion for the variable $$](https://github.com/Lord-Topa/smallsh/edit/main/README.md#3-provide-expansion-for-the-variable-)
 	4) [Execute 3 commands exit, cd, and status via code built into the shell](https://github.com/Lord-Topa/smallsh/edit/main/README.md#4-execute-3-commands-via-code-built-into-the-shell-exit-cd-status)
 	5) [Execute other commands by creating new processes using a function from the exec family of functions](https://github.com/Lord-Topa/smallsh/edit/main/README.md#5-execute-other-commands-by-creating-new-processes-using-a-function-from-the-exec-family-of-functions)
-	6) [Support input and output redirection](https://github.com/Lord-Topa/smallsh/edit/main/README.md#6-support-input-and-output-redirection)
-	7) [Support running commands in foreground and background processes](https://github.com/Lord-Topa/smallsh/edit/main/README.md#7-support-running-commands-in-foreground-and-background-processes)
+	6) [Support input and output redirection](https://github.com/Lord-Topa/smallsh/main/README.md#6-support-input-and-output-redirection)
+	7) [Support running commands in foreground and background processes](https://github.com/Lord-Topa/smallsh/main/README.md#7-support-running-commands-in-foreground-and-background-processes)
 	8) [Implement custom handlers for 2 signals, SIGINT and SIGTSTP](https://github.com/Lord-Topa/smallsh/edit/main/README.md#8-implement-custom-handlers-for-2-signals-sigint-and-sigtstp)
 
 * [Sources Used](https://github.com/Lord-Topa/smallsh/edit/main/README.md#sources-used)
