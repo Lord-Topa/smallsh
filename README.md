@@ -4,21 +4,21 @@
 
 ## CONTENTS: 
 	
-* [Instructions](https://github.com/Lord-Topa/smallsh/edit/main/README.md#instructions)
+* [Instructions](https://github.com/Lord-Topa/smallsh/blob/main/README.md#instructions)
 
-* [Description](https://github.com/Lord-Topa/smallsh/edit/main/README.md#description)
+* [Description](https://github.com/Lord-Topa/smallsh/blob/main/README.md#description)
 
-* [In-depth Breakdown of Project Requirements:](https://github.com/Lord-Topa/smallsh/edit/main/README.md#in-depth-breakdown-of-requirments)
-	1) [Provide a prompt for running commands](https://github.com/Lord-Topa/smallsh/edit/main/README.md#1-provide-a-prompt-for-running-commands)
-	2) [Handle blank lines and comments](https://github.com/Lord-Topa/smallsh/edit/main/README.md#2-handle-blank-lines-and-comments)
-	3) [Provide expansion for the variable $$](https://github.com/Lord-Topa/smallsh/edit/main/README.md#3-provide-expansion-for-the-variable-)
+* [In-depth Breakdown of Project Requirements:](https://github.com/Lord-Topa/smallsh/blob/main/README.md#in-depth-breakdown-of-project-requirments)
+	1) [Provide a prompt for running commands](https://github.com/Lord-Topa/smallsh/blob/main/README.md#provide-a-prompt-for-running-commands)
+	2) [Handle blank lines and comments](https://github.com/Lord-Topa/smallsh/blob/main/README.md#handle-blank-lines-and-comments)
+	3) [Provide expansion for the variable $$](https://github.com/Lord-Topa/smallsh/blob/main/README.md#provide-expansion-for-the-variable-)
 	4) [Execute 3 commands exit, cd, and status via code built into the shell](https://github.com/Lord-Topa/smallsh/edit/main/README.md#4-execute-3-commands-via-code-built-into-the-shell-exit-cd-status)
-	5) [Execute other commands by creating new processes using a function from the exec family of functions](https://github.com/Lord-Topa/smallsh/edit/main/README.md#5-execute-other-commands-by-creating-new-processes-using-a-function-from-the-exec-family-of-functions)
-	6) [Support input and output redirection](https://github.com/Lord-Topa/smallsh/main/README.md#6-support-input-and-output-redirection)
-	7) [Support running commands in foreground and background processes](https://github.com/Lord-Topa/smallsh/main/README.md#7-support-running-commands-in-foreground-and-background-processes)
-	8) [Implement custom handlers for 2 signals, SIGINT and SIGTSTP](https://github.com/Lord-Topa/smallsh/edit/main/README.md#8-implement-custom-handlers-for-2-signals-sigint-and-sigtstp)
+	5) [Execute other commands by creating new processes using a function from the exec family of functions](https://github.com/Lord-Topa/smallsh/blob/main/README.md#execute-3-commands-via-code-built-into-the-shell-exit-cd-status)
+	6) [Support input and output redirection](https://github.com/Lord-Topa/smallsh/blob/main/README.md#support-input-and-output-redirection)
+	7) [Support running commands in foreground and background processes](https://github.com/Lord-Topa/smallsh/blob/main/README.md#support-running-commands-in-foreground-and-background-processes
+	8) [Implement custom handlers for 2 signals, SIGINT and SIGTSTP](https://github.com/Lord-Topa/smallsh/blob/main/README.md#implement-custom-handlers-for-2-signals-sigint-and-sigtstp)
 
-* [Sources Used](https://github.com/Lord-Topa/smallsh/edit/main/README.md#sources-used)
+* [Sources Used](https://github.com/Lord-Topa/smallsh/blob/main/README.md#sources-used)
 
 
 
