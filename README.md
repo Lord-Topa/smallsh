@@ -4,9 +4,9 @@
 
 ## CONTENTS: 
 	
-* [Instructions](https://github.com/Lord-Topa/smallsh/blob/main/README.md#instructions)
+* [Instructions](https://github.com/Lord-Topa/smallsh#instructions)
 
-* [Description](https://github.com/Lord-Topa/smallsh/blob/main/README.md#description)
+* [Description](https://github.com/Lord-Topa/smallsh#description)
 
 * [In-depth Breakdown of Project Requirements:](https://github.com/Lord-Topa/smallsh/blob/main/README.md#in-depth-breakdown-of-project-requirments)
 	1) [Provide a prompt for running commands](https://github.com/Lord-Topa/smallsh/blob/main/README.md#provide-a-prompt-for-running-commands)
