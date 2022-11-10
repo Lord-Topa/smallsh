@@ -43,9 +43,9 @@
 	…where items in square brackets are optional.
 	
 * Lines starting with *#* are considered comments and will be ignored by the shell
-* A *&* at the end of a command will mark that command as one to be run in the background
-* A *<* followed by a space and then a filename will mark that file as the input file for a command
-* A *>* followed by a space and then a filename will mark that file as the output file for a command
+* A "*&*" at the end of a command will mark that command as one to be run in the background
+* A "*<*" followed by a space and then a filename will mark that file as the input file for a command
+* A "*>*" followed by a space and then a filename will mark that file as the output file for a command
 
 **Built in Shell Commands:**
 			
