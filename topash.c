@@ -71,14 +71,12 @@ int main(int argc, char* argv[]) {
 			memset(inputFile, 0, sizeof(char) * 255); //clear out anything previously in the input file
 			memset(outputFile, 0, sizeof(char) * 255); //clear out anything previously in the output file
 			processString(pid, commandLineInput, command, inputFile, outputFile, &bg);
-			
 			if (!command[0]) {continue;}
 
 			if (strcmp(command[0], "exit") == 0) {
 				keepGoing = 0;
 			}
 			else if (strcmp(command[0], "cd") == 0) {
-				echoCommand(command);
 				if (command[1]) {
 					if (chdir(command[1]) == -1) {
 						printf("!!! Could not navigate to '%s' ERROR MESSAGE: %s!!!\n", path, strerror(errno));
@@ -136,7 +134,7 @@ int promptUser(char* storage, char* path) {
 *	split string up into multiple smaller strings to check for args
 */
 void processString(int pid, char* str, char* command[], char* input, char* output, int* bg) {
-	
+
 	*bg = 0;
 
 	if (str[0] == 35) { //if the line starts with # it is a comment and should be disregarded
@@ -155,6 +153,12 @@ void processString(int pid, char* str, char* command[], char* input, char* outpu
 	if (strcmp(str, "") == 0) {
 		return;
 	}
+
+	if (str[strlen(str) - 1] == '&' && str[strlen(str) - 2] == ' ') {
+		//str[strlen(str) - 1] = '\0';
+		str[strlen(str) - 2] = '\0';
+		*bg = 1;
+	}
 	
 	//split string into smaller strings for args
 	char* saveptr;
@@ -172,12 +176,7 @@ void processString(int pid, char* str, char* command[], char* input, char* outpu
 		* respectively
 		*/
 
-
-		if (strcmp(token, "&") == 0 && strcmp(command[0], "echo") != 0) {
-			*bg = 1;
-			break;
-		}
-		else if (strcmp(token, "<") == 0) {
+		if (strcmp(token, "<") == 0) {
 			token = strtok_r(NULL, space, &saveptr);
 			strcpy(input, token);
 		}

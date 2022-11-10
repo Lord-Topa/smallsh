@@ -1,9 +1,9 @@
 CC=gcc --std=gnu99 -g
 
-all: smallsh
+all: topash
 
-smallsh: smallsh.c smallsh.h 
-	$(CC) smallsh.c smallsh.h -o smallsh
+topash: topash.c topash.h 
+	$(CC) topash.c topash.h -o topash
 
 clean:
-	rm -f *.o smallsh
+	rm -f *.o topash
